@@ -1,9 +1,8 @@
 # png-metadata
 library to read and write PNG Metadata
 
-
-
 w3 PNG Chunks specification: https://www.w3.org/TR/PNG-Chunks.html
+
 The Metadata in PNG files: https://dev.exiv2.org/projects/exiv2/wiki/The_Metadata_in_PNG_files
  
  
