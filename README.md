@@ -1,5 +1,5 @@
 # png-metadata
-library to read and write PNG Metadata
+library to read and write PNG Metadata on NodeJS and Browser
 
 w3 PNG Chunks specification: https://www.w3.org/TR/PNG-Chunks.html
 
