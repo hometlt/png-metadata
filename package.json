@@ -1,0 +1,9 @@
+{
+  "name": "png-metadata",
+  "version": "1.0.0",
+  "description": "library to read and write PNG Metadata",
+  "main": "index.js",
+  "dependencies": {
+    "crc-32": "^1.2.0"
+  }
+}
