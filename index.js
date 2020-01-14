@@ -1,6 +1,10 @@
 /**
- * library to read and write PNG Metadata: 
+ * library to read and write PNG Metadata
+ *
+ * References:
  * w3 PNG Chunks specification: https://www.w3.org/TR/PNG-Chunks.html
+ * The Metadata in PNG files: https://dev.exiv2.org/projects/exiv2/wiki/The_Metadata_in_PNG_files
+ *
  *
  * @example
 
@@ -28,13 +32,8 @@
 
  */
 
-
-
+require('./blob.toArrayBuffer')
 let crc32 = require('./crc-32')
-
-
-
-
 
 
 // Used for fast-ish conversion between uint8s and uint32s/int32s.
@@ -320,10 +319,8 @@ function encodeChunks (chunks) {
 			output[idx++] = data[j++]
 		}
 
-		let crcCheck = nameChars.concat(sliced(data))
-		let crc = crc32.buf(crcCheck)
-
-		int32[0] = crc
+		let crcCheck = nameChars.concat(sliced(data));
+		int32[0] = crc32.buf(crcCheck)
 		output[idx++] = uint8[3]
 		output[idx++] = uint8[2]
 		output[idx++] = uint8[1]
@@ -401,14 +398,27 @@ function readMetadata(buffer){
 
 /**
  * create new Buffer with metadata. only tEXt and pHYs chunks are supported.
- * @param buffer
+ * @param buffer {Buffer}
  * @param metadata {{tEXt: {keyword: value}, pHYs: {x: number, y: number, units: RESOLUTION_UNITS}}}
  * @returns {Buffer}
  */
-function withMetadata(buffer,metadata){
+function writeMetadata(buffer,metadata){
 	const chunks = extractChunks(buffer);
 	insertMetadata(chunks,metadata);
 	return new Buffer.from(encodeChunks(chunks))
+}
+
+/**
+ * the same. but for Blobs
+ * @param blob {Blob}
+ * @param metadata {{tEXt: {keyword: value}, pHYs: {x: number, y: number, units: RESOLUTION_UNITS}}}
+ * @returns {Promise<Blob>} new blob
+ */
+async function writeMetadataB(blob,metadata){
+	let arrayBuffer = await blob.arrayBuffer(blob);
+	let uint8Array = new Uint8Array(arrayBuffer);
+	let newBuffer = fabric.util.png.writeMetadata(uint8Array,{});
+	return  new Blob([newBuffer], {type : blob.type});
 }
 
 function insertMetadata(chunks,metadata){
@@ -446,11 +456,14 @@ function insertMetadata(chunks,metadata){
 	}
 }
 
+
+
 module.exports = {
 	RESOLUTION_UNITS: RESOLUTION_UNITS,
 	insertMetadata: insertMetadata,
 	readMetadata: readMetadata,
-	withMetadata: withMetadata,
+	writeMetadata: writeMetadata,
+	writeMetadataB: writeMetadataB,
 	textEncode: textEncode,
 	textDecode: textDecode,
 	extractChunks: extractChunks,
