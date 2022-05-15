@@ -7,7 +7,7 @@
  */
 
 require('./blob.toArrayBuffer')
-let crc32 = require('./crc-32')
+let crc32 = require('./crc32')
 
 
 // Used for fast-ish conversion between uint8s and uint32s/int32s.
