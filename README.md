@@ -27,7 +27,7 @@ The Metadata in PNG files: https://dev.exiv2.org/projects/exiv2/wiki/The_Metadat
 
   //Browser
   const blob = await loadFileAsBlob('1000ppcm.png');
-  const buffer = await blob.arrayBuffer();
+  const buffer = new Uint8Array(await blob.arrayBuffer());
 
   //NodeJS
   const buffer = fs.readFileSync('1000ppcm.png')
